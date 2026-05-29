@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="ControlGastos.Data/ControlGastos.Data.csproj" />
+  <Project Path="ControlGastos.Services/ControlGastos.Services.csproj" />
+  <Project Path="ControlGastos.Web/ControlGastos.Web.csproj" />
+</Solution>
