@@ -1,31 +1,174 @@
-html {
-  font-size: 14px;
+body {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    body { font-size: 15px; }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+/* ── Sidebar ── */
+#sidebar {
+    width: 240px;
+    min-width: 240px;
+    transition: width 0.25s ease, min-width 0.25s ease;
+    position: sticky;
+    top: 56px;
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+#sidebar.collapsed {
+    width: 60px;
+    min-width: 60px;
 }
 
-body {
-  margin-bottom: 60px;
+#sidebar.collapsed .sidebar-section-label,
+#sidebar.collapsed .nav-link span,
+#sidebar.collapsed .sidebar-header span,
+#sidebar.collapsed footer span {
+    display: none;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+#sidebar.collapsed .nav-link {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+#sidebar.collapsed .nav-link i {
+    margin-right: 0 !important;
+    font-size: 1.2rem;
+}
+
+.sidebar-link {
+    color: rgba(255,255,255,.75);
+    border-radius: 8px;
+    padding: 8px 12px;
+    transition: background .15s, color .15s;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+    background: rgba(255,255,255,.12);
+    color: #fff;
+}
+
+.sidebar-link.active {
+    background: rgba(13,110,253,.4);
+    color: #fff;
+    font-weight: 500;
+}
+
+.sidebar-section-label {
+    display: block;
+    font-size: 0.7rem;
+    padding: 4px 8px;
+    margin-top: 4px;
+}
+
+/* ── Main content ── */
+.main-content {
+    transition: margin-left 0.25s ease;
+}
+
+/* ── Page header ── */
+.page-header {
+    border-bottom: 2px solid #dee2e6;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* ── Cards ── */
+.card {
+    border: none;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    border-radius: 12px;
+}
+
+.card-header {
+    border-radius: 12px 12px 0 0 !important;
+    border-bottom: 1px solid rgba(0,0,0,.07);
+}
+
+/* ── Table ── */
+.table thead th {
+    background: #f8f9fa;
+    font-weight: 600;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: #6c757d;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table tbody tr {
+    transition: background .1s;
+}
+
+.table tbody tr:hover {
+    background: #f0f4ff;
+}
+
+/* ── Buttons ── */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.btn-icon {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+/* ── Forms ── */
+.form-control:focus,
+.form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.2rem rgba(13,110,253,.18);
+}
+
+/* ── Focus fix ── */
+.btn:focus, .btn:active:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+/* ── KPI Cards ── */
+.kpi-card {
+    transition: transform .15s, box-shadow .15s;
+}
+
+.kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,.1) !important;
+}
+
+.kpi-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.kpi-icon-sm {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: .85rem;
 }
