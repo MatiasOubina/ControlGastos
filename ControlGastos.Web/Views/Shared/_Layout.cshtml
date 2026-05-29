@@ -58,7 +58,25 @@
                 <li class="nav-item">
                     <a class="nav-link sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SubCategoria" ? "active" : "")"
                        asp-controller="Subcategoria" asp-action="Index">
-                        <i class="bi bi-tag me-2"></i> Subcategorías
+                        <i class="bi bi-tags me-2"></i> Subcategorías
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Cuenta" ? "active" : "")"
+                       asp-controller="Cuenta" asp-action="Index">
+                        <i class="bi bi-credit-card me-2"></i> Cuentas
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "FormasDePago" ? "active" : "")"
+                       asp-controller="FormasDePago" asp-action="Index">
+                        <i class="bi bi-wallet me-2"></i> Formas de Pago
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "TiposMovimiento" ? "active" : "")"
+                       asp-controller="TiposMovimiento" asp-action="Index">
+                        <i class="bi bi-arrow-left-right me-2"></i> Tipos de Movimiento
                     </a>
                 </li>
             </ul>

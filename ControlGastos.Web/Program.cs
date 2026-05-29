@@ -12,6 +12,9 @@ builder.Services.AddDbContext<ControlGastosDbContext>(options =>
 
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 builder.Services.AddScoped<ISubCategoriaService, SubCategoriaService>();
+builder.Services.AddScoped<ICuentaService, CuentaService>();
+builder.Services.AddScoped<IFormasDePagoService, FormasDePagoService>();
+builder.Services.AddScoped<ITiposMovimientoService, TiposMovimientoService>();
 
 var app = builder.Build();
 
