@@ -1,0 +1,254 @@
+@model IEnumerable<ControlGastos.Data.Entities.Movimiento>
+@{
+    ViewData["Title"] = "Movimientos";
+    int mesFiltro      = ViewBag.MesFiltro;
+    int anioFiltro     = ViewBag.AnioFiltro;
+    int? idCuenta      = ViewBag.IdCuenta;
+    decimal ingresos   = ViewBag.TotalIngresos;
+    decimal egresos    = ViewBag.TotalEgresos;
+    decimal balance    = ViewBag.Balance;
+
+    string[] meses = { "Enero","Febrero","Marzo","Abril","Mayo","Junio",
+                        "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre" };
+}
+
+<div class="page-header d-flex align-items-center justify-content-between">
+    <div>
+        <h4 class="fw-bold mb-0 d-flex align-items-center gap-2">
+            <i class="bi bi-journal-text text-primary"></i> Movimientos
+        </h4>
+        <small class="text-muted">Registros de ingresos, egresos y pasajes</small>
+    </div>
+    <a asp-action="Create" class="btn btn-primary d-flex align-items-center gap-2">
+        <i class="bi bi-plus-circle"></i> Nuevo Movimiento
+    </a>
+</div>
+
+<!-- Filtros -->
+<div class="card mb-3">
+    <div class="card-body py-3">
+        <form method="get" asp-action="Index" class="row g-2 align-items-end">
+            <div class="col-auto">
+                <label class="form-label fw-semibold small mb-1">Mes</label>
+                <select name="mes" class="form-select form-select-sm" style="width:140px;">
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <option value="@i" selected="@(i == mesFiltro)">@meses[i - 1]</option>
+                    }
+                </select>
+            </div>
+            <div class="col-auto">
+                <label class="form-label fw-semibold small mb-1">Año</label>
+                <select name="anio" class="form-select form-select-sm" style="width:100px;">
+                    @for (int y = DateTime.Today.Year + 1; y >= 2020; y--)
+                    {
+                        <option value="@y" selected="@(y == anioFiltro)">@y</option>
+                    }
+                </select>
+            </div>
+            <div class="col-auto">
+                <label class="form-label fw-semibold small mb-1">Cuenta</label>
+                <select name="idCuenta" asp-items="ViewBag.Cuentas"
+                        class="form-select form-select-sm" style="width:180px;">
+                    <option value="">Todas las cuentas</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-search me-1"></i> Filtrar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- KPIs de totales -->
+<div class="row g-3 mb-3">
+    <div class="col-12 col-sm-4">
+        <div class="card border-0 h-100">
+            <div class="card-body d-flex align-items-center gap-3 py-3 px-4">
+                <div class="kpi-icon bg-success-subtle text-success">
+                    <i class="bi bi-arrow-up-circle-fill fs-4"></i>
+                </div>
+                <div>
+                    <div class="text-muted small fw-semibold text-uppercase">Ingresos</div>
+                    <div class="fs-5 fw-bold text-success">+ $ @ingresos.ToString("N2")</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-4">
+        <div class="card border-0 h-100">
+            <div class="card-body d-flex align-items-center gap-3 py-3 px-4">
+                <div class="kpi-icon bg-danger-subtle text-danger">
+                    <i class="bi bi-arrow-down-circle-fill fs-4"></i>
+                </div>
+                <div>
+                    <div class="text-muted small fw-semibold text-uppercase">Egresos</div>
+                    <div class="fs-5 fw-bold text-danger">- $ @egresos.ToString("N2")</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-4">
+        <div class="card border-0 h-100">
+            <div class="card-body d-flex align-items-center gap-3 py-3 px-4">
+                <div class="kpi-icon @(balance >= 0 ? "bg-primary-subtle text-primary" : "bg-warning-subtle text-warning")">
+                    <i class="bi bi-piggy-bank-fill fs-4"></i>
+                </div>
+                <div>
+                    <div class="text-muted small fw-semibold text-uppercase">Balance</div>
+                    <div class="fs-5 fw-bold @(balance >= 0 ? "text-primary" : "text-warning")">
+                        @(balance >= 0 ? "+ " : "")$ @balance.ToString("N2")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabla -->
+<div class="card">
+    <div class="card-body p-0">
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                <p class="mb-0">No hay movimientos para el período seleccionado.</p>
+                <a asp-action="Create" class="btn btn-primary btn-sm mt-3">
+                    <i class="bi bi-plus-circle me-1"></i> Registrar movimiento
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 small">
+                    <thead>
+                        <tr>
+                            <th style="width:95px;">Fecha</th>
+                            <th style="width:120px;">Cuenta</th>
+                            <th style="width:110px;">Tipo</th>
+                            <th style="width:130px;">Categoría / Destino</th>
+                            <th style="width:120px;">Subcategoría</th>
+                            <th>Detalle</th>
+                            <th style="width:110px;">Forma Pago</th>
+                            <th style="width:120px;" class="text-end">Monto</th>
+                            <th style="width:80px;" class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var clasif      = MovimientoHelper.GetClasificacion(item.IdTipoMovimientoNavigation.Descripcion);
+                            var colorClass  = MovimientoHelper.GetColorClass(item.IdTipoMovimientoNavigation.Descripcion);
+                            var badgeClass  = MovimientoHelper.GetBadgeClass(item.IdTipoMovimientoNavigation.Descripcion);
+                            var montoFmt    = MovimientoHelper.FormatMonto(item.Monto, item.IdTipoMovimientoNavigation.Descripcion);
+                            bool esPasaje   = clasif == "Pasaje";
+                            string? cuentaDestino = esPasaje
+                                ? item.IdMovimientoVinculadoNavigation?.IdCuentaNavigation?.Descripcion
+                                : null;
+
+                            <tr>
+                                <td class="text-muted">@item.FechaMovimiento.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <span class="badge bg-secondary-subtle text-secondary">
+                                        @item.IdCuentaNavigation.Descripcion
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge @badgeClass">
+                                        @item.IdTipoMovimientoNavigation.Descripcion
+                                    </span>
+                                </td>
+                                <td>
+                                    @if (esPasaje)
+                                    {
+                                        <span class="fw-medium">@(cuentaDestino ?? "–")</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="fw-medium">@item.IdCategoriaNavigation.Descripcion</span>
+                                    }
+                                </td>
+                                <td class="text-muted">
+                                    @(esPasaje ? "–" : (item.IdSubCategoriaNavigation?.Descripcion ?? "–"))
+                                </td>
+                                <td class="text-muted text-truncate" style="max-width:160px;"
+                                    title="@item.Detalle">
+                                    @(string.IsNullOrEmpty(item.Detalle) ? "–" : item.Detalle)
+                                </td>
+                                <td class="text-muted">@item.IdFormaDePagoNavigation.Descripcion</td>
+                                <td class="text-end @colorClass">@montoFmt</td>
+                                <td class="text-center" style="white-space:nowrap;">
+                                    <a asp-action="Edit" asp-route-id="@item.Id"
+                                       class="btn btn-icon btn-outline-secondary me-1" title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <button type="button"
+                                            class="btn btn-icon btn-outline-danger" title="Eliminar"
+                                            data-bs-toggle="modal" data-bs-target="#modalEliminar"
+                                            data-id="@item.Id"
+                                            data-fecha="@item.FechaMovimiento.ToString("dd/MM/yyyy")"
+                                            data-desc="@(string.IsNullOrEmpty(item.Detalle) ? item.IdCategoriaNavigation.Descripcion : item.Detalle)"
+                                            data-monto="@montoFmt">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Modal confirmar eliminar -->
+<div class="modal fade" id="modalEliminar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-semibold">
+                    <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Confirmar eliminación
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-1">¿Eliminar el movimiento del <strong id="modalFecha"></strong>?</p>
+                <p class="text-muted small mb-1">
+                    <i class="bi bi-card-text me-1"></i><span id="modalDesc"></span>
+                </p>
+                <p class="text-muted small mb-0">
+                    <i class="bi bi-currency-dollar me-1"></i>Monto: <strong id="modalMonto"></strong>
+                </p>
+                <p class="text-danger small mt-2 mb-0">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Si es un pasaje, se eliminarán <strong>ambos</strong> movimientos vinculados.
+                </p>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form asp-action="Delete" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" id="inputIdEliminar" />
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash3 me-1"></i> Eliminar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('modalEliminar').addEventListener('show.bs.modal', function (e) {
+            var btn = e.relatedTarget;
+            document.getElementById('modalFecha').textContent  = btn.dataset.fecha;
+            document.getElementById('modalDesc').textContent   = btn.dataset.desc;
+            document.getElementById('modalMonto').textContent  = btn.dataset.monto;
+            document.getElementById('inputIdEliminar').value   = btn.dataset.id;
+        });
+    </script>
+}

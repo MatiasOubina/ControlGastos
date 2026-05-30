@@ -15,6 +15,8 @@ builder.Services.AddScoped<ISubCategoriaService, SubCategoriaService>();
 builder.Services.AddScoped<ICuentaService, CuentaService>();
 builder.Services.AddScoped<IFormasDePagoService, FormasDePagoService>();
 builder.Services.AddScoped<ITiposMovimientoService, TiposMovimientoService>();
+builder.Services.AddScoped<ISaldosInicialesService, SaldosInicialesService>();
+builder.Services.AddScoped<IMovimientoService, MovimientoService>();
 
 var app = builder.Build();
 
@@ -25,13 +27,12 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
-app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

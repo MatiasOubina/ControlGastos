@@ -1,0 +1,243 @@
+@model ControlGastos.Data.Entities.Movimiento
+@{
+    ViewData["Title"] = "Editar Movimiento";
+    bool esPasajeInicial = ViewBag.EsPasaje ?? false;
+}
+
+<div class="page-header d-flex align-items-center gap-2">
+    <a asp-action="Index"
+       asp-route-mes="@Model.FechaMovimiento.Month"
+       asp-route-anio="@Model.FechaMovimiento.Year"
+       class="btn btn-icon btn-outline-secondary me-1" title="Volver">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <div>
+        <h4 class="fw-bold mb-0 d-flex align-items-center gap-2">
+            <i class="bi bi-pencil-square text-warning"></i> Editar Movimiento
+        </h4>
+        <small class="text-muted">Modificá los datos del movimiento</small>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-7">
+        <div class="card">
+            <div class="card-body p-4">
+                <form asp-action="Edit" method="post" novalidate id="formMovimiento">
+                    @Html.AntiForgeryToken()
+                    <input asp-for="Id" type="hidden" />
+                    @* Conservar IdMovimientoVinculado para que el servicio sepa si ya era un pasaje *@
+                    <input asp-for="IdMovimientoVinculado" type="hidden" />
+
+                    <div class="row g-3">
+
+                        <!-- Fecha -->
+                        <div class="col-sm-4">
+                            <label asp-for="FechaMovimiento" class="form-label fw-semibold">
+                                Fecha <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="bi bi-calendar3 text-muted"></i>
+                                </span>
+                                <input asp-for="FechaMovimiento" type="date"
+                                       class="form-control border-start-0" />
+                            </div>
+                            <span asp-validation-for="FechaMovimiento" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Cuenta origen -->
+                        <div class="col-sm-4">
+                            <label asp-for="IdCuenta" class="form-label fw-semibold">
+                                Cuenta <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="bi bi-credit-card text-muted"></i>
+                                </span>
+                                <select asp-for="IdCuenta" asp-items="ViewBag.Cuentas"
+                                        class="form-select border-start-0">
+                                    <option value="">-- Cuenta --</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="IdCuenta" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Tipo de movimiento -->
+                        <div class="col-sm-4">
+                            <label asp-for="IdTipoMovimiento" class="form-label fw-semibold">
+                                Tipo <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="bi bi-arrow-left-right text-muted"></i>
+                                </span>
+                                <select asp-for="IdTipoMovimiento" asp-items="ViewBag.TiposMovimiento"
+                                        class="form-select border-start-0" id="selectTipo">
+                                    <option value="">-- Tipo --</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="IdTipoMovimiento" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Cuenta DESTINO (solo para pasajes) -->
+                        <div class="col-sm-6" id="rowCuentaDestino" style="display:none;">
+                            <label class="form-label fw-semibold">
+                                Cuenta destino <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="bi bi-arrow-right text-primary"></i>
+                                </span>
+                                <select name="idCuentaDestino" asp-items="ViewBag.CuentasDestino"
+                                        class="form-select border-start-0" id="selectCuentaDestino">
+                                    <option value="">-- Cuenta destino --</option>
+                                </select>
+                            </div>
+                            <span class="text-danger small">@Html.ValidationMessage("IdCuentaDestino")</span>
+                        </div>
+
+                        <!-- Categoría (oculta para pasajes) -->
+                        <div class="col-sm-6" id="rowCategoria">
+                            <label asp-for="IdCategoria" class="form-label fw-semibold">
+                                Categoría <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="bi bi-tag text-muted"></i>
+                                </span>
+                                <select asp-for="IdCategoria" asp-items="ViewBag.Categorias"
+                                        class="form-select border-start-0" id="selectCategoria">
+                                    <option value="">-- Categoría --</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="IdCategoria" class="text-danger small"></span>
+                        </div>
+
+                        <!-- SubCategoría (oculta para pasajes) -->
+                        <div class="col-sm-6" id="rowSubCategoria">
+                            <label asp-for="IdSubCategoria" class="form-label fw-semibold">
+                                Subcategoría <span class="text-muted small fw-normal">(opcional)</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="bi bi-diagram-2 text-muted"></i>
+                                </span>
+                                <select asp-for="IdSubCategoria" asp-items="ViewBag.SubCategorias"
+                                        class="form-select border-start-0" id="selectSubCategoria">
+                                    <option value="">-- Sin subcategoría --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Forma de pago -->
+                        <div class="col-sm-5">
+                            <label asp-for="IdFormaDePago" class="form-label fw-semibold">
+                                Forma de Pago <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="bi bi-wallet text-muted"></i>
+                                </span>
+                                <select asp-for="IdFormaDePago" asp-items="ViewBag.FormasDePago"
+                                        class="form-select border-start-0">
+                                    <option value="">-- Forma de pago --</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="IdFormaDePago" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Monto -->
+                        <div class="col-sm-4">
+                            <label asp-for="Monto" class="form-label fw-semibold">
+                                Monto <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">$</span>
+                                <input asp-for="Monto" type="number" step="0.01" min="0"
+                                       class="form-control" />
+                            </div>
+                            <span asp-validation-for="Monto" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Detalle -->
+                        <div class="col-12">
+                            <label asp-for="Detalle" class="form-label fw-semibold">
+                                Detalle <span class="text-muted small fw-normal">(opcional)</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="bi bi-card-text text-muted"></i>
+                                </span>
+                                <input asp-for="Detalle" class="form-control border-start-0" maxlength="500" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="d-flex gap-2 justify-content-end mt-4">
+                        <a asp-action="Index"
+                           asp-route-mes="@Model.FechaMovimiento.Month"
+                           asp-route-anio="@Model.FechaMovimiento.Year"
+                           class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle me-1"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-warning text-white">
+                            <i class="bi bi-floppy me-1"></i> Guardar cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        const clasificaciones    = @Html.Raw(ViewBag.TiposClasificacionJson);
+        const selectTipo         = document.getElementById('selectTipo');
+        const selectCategoria    = document.getElementById('selectCategoria');
+        const selectSubCategoria = document.getElementById('selectSubCategoria');
+        const selectedSubId      = @(Model.IdSubCategoria?.ToString() ?? "null");
+
+        // ── Mostrar/ocultar secciones según tipo ────────────────────────────
+        function actualizarFormulario() {
+            const clasif   = clasificaciones[selectTipo.value] || '';
+            const esPasaje = clasif === 'Pasaje';
+
+            document.getElementById('rowCuentaDestino').style.display = esPasaje ? '' : 'none';
+            document.getElementById('rowCategoria').style.display     = esPasaje ? 'none' : '';
+            document.getElementById('rowSubCategoria').style.display  = esPasaje ? 'none' : '';
+        }
+
+        selectTipo.addEventListener('change', function () {
+            actualizarFormulario();
+            // Si cambia a no-pasaje, limpiar cuenta destino
+            if ((clasificaciones[this.value] || '') !== 'Pasaje')
+                document.getElementById('selectCuentaDestino').value = '';
+        });
+
+        actualizarFormulario(); // estado inicial (respeta esPasajeInicial)
+
+        // ── AJAX subcategorías ───────────────────────────────────────────────
+        selectCategoria.addEventListener('change', function () {
+            const idCat = this.value;
+            selectSubCategoria.innerHTML = '<option value="">-- Sin subcategoría --</option>';
+            if (!idCat) { selectSubCategoria.disabled = true; return; }
+
+            fetch(`/Movimiento/GetSubCategorias?idCategoria=${idCat}`)
+                .then(r => r.json())
+                .then(data => {
+                    selectSubCategoria.disabled = data.length === 0;
+                    data.forEach(s => {
+                        const opt = new Option(s.descripcion, s.id);
+                        if (s.id === selectedSubId) opt.selected = true;
+                        selectSubCategoria.add(opt);
+                    });
+                });
+        });
+
+        // Si ya hay categoría seleccionada al cargar (caso Edit normal), el dropdown ya viene poblado del servidor
+    </script>
+}

@@ -16,7 +16,7 @@
     <!-- Top Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow-sm" style="z-index:1040;">
         <div class="container-fluid px-3">
-            <button class="btn btn-link text-white me-2 p-0 sidebar-toggle" id="sidebarToggle" type="button">
+            <button class="btn btn-link text-white me-2 p-0" id="sidebarToggle" type="button" title="Ocultar/mostrar menú">
                 <i class="bi bi-list fs-4"></i>
             </button>
             <a class="navbar-brand fw-bold d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
@@ -35,53 +35,84 @@
 
         <!-- Sidebar -->
         <nav id="sidebar" class="sidebar bg-dark text-white d-flex flex-column">
+
             <div class="sidebar-header px-3 py-3 border-bottom border-secondary">
-                <span class="text-white-50 small text-uppercase fw-semibold letter-spacing-1">Navegación</span>
+                <span class="sidebar-label text-white-50 small text-uppercase fw-semibold">Navegación</span>
             </div>
+
             <ul class="nav flex-column flex-grow-1 px-2 py-2">
+
                 <li class="nav-item">
                     <a class="nav-link sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")"
-                       asp-controller="Home" asp-action="Index">
-                        <i class="bi bi-house-door me-2"></i> Inicio
+                       asp-controller="Home" asp-action="Index" title="Inicio">
+                        <i class="bi bi-house-door sidebar-icon"></i>
+                        <span class="sidebar-label">Inicio</span>
                     </a>
                 </li>
 
-                <li class="nav-item mt-2">
-                    <span class="sidebar-section-label px-2 text-white-50 small text-uppercase fw-semibold">Configuración</span>
+                <li class="nav-item nav-section mt-2">
+                    <span class="sidebar-label px-2 text-white-50 small text-uppercase fw-semibold">Operaciones</span>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Movimiento" ? "active" : "")"
+                       asp-controller="Movimiento" asp-action="Index" title="Movimientos">
+                        <i class="bi bi-journal-text sidebar-icon"></i>
+                        <span class="sidebar-label">Movimientos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SaldosIniciales" ? "active" : "")"
+                       asp-controller="SaldosIniciales" asp-action="Index" title="Saldos Iniciales">
+                        <i class="bi bi-bank sidebar-icon"></i>
+                        <span class="sidebar-label">Saldos Iniciales</span>
+                    </a>
+                </li>
+
+                <li class="nav-item nav-section mt-2">
+                    <span class="sidebar-label px-2 text-white-50 small text-uppercase fw-semibold">Configuración</span>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Categoria" ? "active" : "")"
-                       asp-controller="Categoria" asp-action="Index">
-                        <i class="bi bi-tag me-2"></i> Categorías
+                       asp-controller="Categoria" asp-action="Index" title="Categorías">
+                        <i class="bi bi-tag sidebar-icon"></i>
+                        <span class="sidebar-label">Categorías</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SubCategoria" ? "active" : "")"
-                       asp-controller="Subcategoria" asp-action="Index">
-                        <i class="bi bi-tags me-2"></i> Subcategorías
+                       asp-controller="Subcategoria" asp-action="Index" title="Subcategorías">
+                        <i class="bi bi-tags sidebar-icon"></i>
+                        <span class="sidebar-label">Subcategorías</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Cuenta" ? "active" : "")"
-                       asp-controller="Cuenta" asp-action="Index">
-                        <i class="bi bi-credit-card me-2"></i> Cuentas
+                       asp-controller="Cuenta" asp-action="Index" title="Cuentas">
+                        <i class="bi bi-credit-card sidebar-icon"></i>
+                        <span class="sidebar-label">Cuentas</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "FormasDePago" ? "active" : "")"
-                       asp-controller="FormasDePago" asp-action="Index">
-                        <i class="bi bi-wallet me-2"></i> Formas de Pago
+                       asp-controller="FormasDePago" asp-action="Index" title="Formas de Pago">
+                        <i class="bi bi-wallet sidebar-icon"></i>
+                        <span class="sidebar-label">Formas de Pago</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "TiposMovimiento" ? "active" : "")"
-                       asp-controller="TiposMovimiento" asp-action="Index">
-                        <i class="bi bi-arrow-left-right me-2"></i> Tipos de Movimiento
+                       asp-controller="TiposMovimiento" asp-action="Index" title="Tipos de Movimiento">
+                        <i class="bi bi-arrow-left-right sidebar-icon"></i>
+                        <span class="sidebar-label">Tipos de Movimiento</span>
                     </a>
                 </li>
+
             </ul>
-            <div class="px-3 py-3 border-top border-secondary">
-                <span class="text-white-50 small">&copy; @DateTime.Now.Year Control Gastos</span>
+
+            <div class="px-3 py-3 border-top border-secondary sidebar-footer">
+                <span class="sidebar-label text-white-50 small">
+                    &copy; @DateTime.Now.Year &nbsp;|&nbsp; Desarrollado por Matías Oubiña
+                </span>
             </div>
         </nav>
 
@@ -112,10 +143,24 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
-        document.getElementById('sidebarToggle').addEventListener('click', function () {
-            document.getElementById('sidebar').classList.toggle('collapsed');
-            document.getElementById('mainContent').classList.toggle('expanded');
-        });
+        (function () {
+            var sidebar     = document.getElementById('sidebar');
+            var mainContent = document.getElementById('mainContent');
+            var btn         = document.getElementById('sidebarToggle');
+            var STORAGE_KEY = 'sidebarCollapsed';
+
+            // Restaurar estado guardado
+            if (localStorage.getItem(STORAGE_KEY) === 'true') {
+                sidebar.classList.add('collapsed');
+                mainContent.classList.add('expanded');
+            }
+
+            btn.addEventListener('click', function () {
+                var collapsed = sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('expanded', collapsed);
+                localStorage.setItem(STORAGE_KEY, collapsed);
+            });
+        })();
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

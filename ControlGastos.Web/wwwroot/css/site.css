@@ -19,56 +19,71 @@ body {
     overflow-x: hidden;
 }
 
+/* Estado colapsado: solo íconos */
 #sidebar.collapsed {
     width: 60px;
     min-width: 60px;
 }
 
-#sidebar.collapsed .sidebar-section-label,
-#sidebar.collapsed .nav-link span,
-#sidebar.collapsed .sidebar-header span,
-#sidebar.collapsed footer span {
+/* Ocultar todos los textos */
+#sidebar.collapsed .sidebar-label {
     display: none;
 }
 
-#sidebar.collapsed .nav-link {
+/* Ocultar las filas de sección (Operaciones / Configuración) */
+#sidebar.collapsed .nav-section {
+    display: none;
+}
+
+/* Centrar el ícono */
+#sidebar.collapsed .sidebar-link {
     justify-content: center;
-    padding-left: 0;
-    padding-right: 0;
+    padding: 10px 0;
 }
 
-#sidebar.collapsed .nav-link i {
-    margin-right: 0 !important;
+/* Ícono más visible en modo compacto */
+#sidebar.collapsed .sidebar-icon {
     font-size: 1.2rem;
+    margin: 0;
 }
 
-.sidebar-link {
+/* Footer colapsado: ocultar texto */
+#sidebar.collapsed .sidebar-footer {
+    padding: 12px 0;
+    text-align: center;
+}
+
+/* ── Links del sidebar ── */
+#sidebar .sidebar-link {
     color: rgba(255,255,255,.75);
     border-radius: 8px;
     padding: 8px 12px;
     transition: background .15s, color .15s;
     display: flex;
     align-items: center;
+    gap: 10px;
     font-size: 0.9rem;
+    white-space: nowrap;
 }
 
-.sidebar-link:hover,
-.sidebar-link.active {
+#sidebar .sidebar-link:hover,
+#sidebar .sidebar-link.active {
     background: rgba(255,255,255,.12);
     color: #fff;
 }
 
-.sidebar-link.active {
+#sidebar .sidebar-link.active {
     background: rgba(13,110,253,.4);
     color: #fff;
     font-weight: 500;
 }
 
-.sidebar-section-label {
-    display: block;
-    font-size: 0.7rem;
-    padding: 4px 8px;
-    margin-top: 4px;
+/* Ícono del sidebar */
+.sidebar-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+    width: 18px;
+    text-align: center;
 }
 
 /* ── Main content ── */
