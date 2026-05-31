@@ -1,3 +1,4 @@
+﻿using Microsoft.AspNetCore.Authorization;
 using ControlGastos.Data.Entities;
 using ControlGastos.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ControlGastos.Web.Controllers;
 
+[Authorize]
 public class SaldosInicialesController : Controller
 {
     private readonly ISaldosInicialesService _service;
@@ -55,7 +57,7 @@ public class SaldosInicialesController : Controller
         if (await _service.ExistePeriodoAsync(saldo.IdCuenta, saldo.Mes, saldo.Anio))
         {
             ModelState.AddModelError(string.Empty,
-                "Ya existe un saldo inicial para esa cuenta en el período seleccionado.");
+                "Ya existe un saldo inicial para esa cuenta en el perÃ­odo seleccionado.");
             await CargarCuentasAsync(saldo.IdCuenta);
             return View(saldo);
         }
@@ -91,7 +93,7 @@ public class SaldosInicialesController : Controller
         if (await _service.ExistePeriodoAsync(saldo.IdCuenta, saldo.Mes, saldo.Anio, id))
         {
             ModelState.AddModelError(string.Empty,
-                "Ya existe un saldo inicial para esa cuenta en el período seleccionado.");
+                "Ya existe un saldo inicial para esa cuenta en el perÃ­odo seleccionado.");
             await CargarCuentasAsync(saldo.IdCuenta);
             return View(saldo);
         }
@@ -120,3 +122,4 @@ public class SaldosInicialesController : Controller
         ViewBag.Cuentas = new SelectList(cuentas, "Id", "Descripcion", selectedId);
     }
 }
+

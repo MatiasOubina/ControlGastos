@@ -1,9 +1,11 @@
+﻿using Microsoft.AspNetCore.Authorization;
 using ControlGastos.Data.Entities;
 using ControlGastos.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ControlGastos.Web.Controllers;
 
+[Authorize]
 public class CuentaController : Controller
 {
     private readonly ICuentaService _service;
@@ -32,7 +34,7 @@ public class CuentaController : Controller
 
         if (await _service.ExisteDescripcionAsync(cuenta.Descripcion))
         {
-            ModelState.AddModelError(nameof(cuenta.Descripcion), "Ya existe una cuenta con esa descripción.");
+            ModelState.AddModelError(nameof(cuenta.Descripcion), "Ya existe una cuenta con esa descripciÃ³n.");
             return View(cuenta);
         }
 
@@ -61,7 +63,7 @@ public class CuentaController : Controller
 
         if (await _service.ExisteDescripcionAsync(cuenta.Descripcion, id))
         {
-            ModelState.AddModelError(nameof(cuenta.Descripcion), "Ya existe una cuenta con esa descripción.");
+            ModelState.AddModelError(nameof(cuenta.Descripcion), "Ya existe una cuenta con esa descripciÃ³n.");
             return View(cuenta);
         }
 
@@ -79,3 +81,4 @@ public class CuentaController : Controller
         return RedirectToAction(nameof(Index));
     }
 }
+

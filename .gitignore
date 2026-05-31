@@ -365,5 +365,8 @@ FodyWeavers.xsd
 #App Settings Production
 appsettings.Production.json
 
+# EF Core Migrations
+**/Migrations/
+
 #Web Config
 web.config

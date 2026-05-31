@@ -1,9 +1,11 @@
+﻿using Microsoft.AspNetCore.Authorization;
 using ControlGastos.Data.Entities;
 using ControlGastos.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ControlGastos.Web.Controllers;
 
+[Authorize]
 public class FormasDePagoController : Controller
 {
     private readonly IFormasDePagoService _service;
@@ -31,7 +33,7 @@ public class FormasDePagoController : Controller
 
         if (await _service.ExisteDescripcionAsync(formaDePago.Descripcion))
         {
-            ModelState.AddModelError(nameof(formaDePago.Descripcion), "Ya existe una forma de pago con esa descripción.");
+            ModelState.AddModelError(nameof(formaDePago.Descripcion), "Ya existe una forma de pago con esa descripciÃ³n.");
             return View(formaDePago);
         }
 
@@ -59,7 +61,7 @@ public class FormasDePagoController : Controller
 
         if (await _service.ExisteDescripcionAsync(formaDePago.Descripcion, id))
         {
-            ModelState.AddModelError(nameof(formaDePago.Descripcion), "Ya existe una forma de pago con esa descripción.");
+            ModelState.AddModelError(nameof(formaDePago.Descripcion), "Ya existe una forma de pago con esa descripciÃ³n.");
             return View(formaDePago);
         }
 
@@ -77,3 +79,4 @@ public class FormasDePagoController : Controller
         return RedirectToAction(nameof(Index));
     }
 }
+

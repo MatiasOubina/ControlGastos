@@ -12,6 +12,8 @@ public partial class ControlGastosDbContext : DbContext
     {
     }
 
+    public virtual DbSet<Usuario> Usuarios { get; set; }
+
     public virtual DbSet<Categoria> Categorias { get; set; }
 
     public virtual DbSet<Cuenta> Cuentas { get; set; }
@@ -28,6 +30,14 @@ public partial class ControlGastosDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Usuario>(entity =>
+        {
+            entity.HasIndex(e => e.NombreUsuario, "UQ_Usuarios_NombreUsuario").IsUnique();
+            entity.Property(e => e.NombreUsuario).HasMaxLength(100);
+            entity.Property(e => e.NombreCompleto).HasMaxLength(200);
+            entity.Property(e => e.PasswordHash).HasMaxLength(100);
+        });
+
         modelBuilder.Entity<Categoria>(entity =>
         {
             entity.HasIndex(e => e.Descripcion, "UQ_Categorias_Descripcion").IsUnique();

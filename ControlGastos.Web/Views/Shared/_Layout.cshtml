@@ -27,6 +27,19 @@
                 <span class="text-white-50 small d-none d-md-inline">
                     <i class="bi bi-calendar3 me-1"></i>@DateTime.Now.ToString("dd/MM/yyyy")
                 </span>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    var nombreCompleto = User.FindFirst("NombreCompleto")?.Value ?? User.Identity.Name;
+                    <span class="text-white-50 small d-none d-md-inline">
+                        <i class="bi bi-person-circle me-1"></i>@nombreCompleto
+                    </span>
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline m-0">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-outline-light btn-sm" title="Cerrar sesión">
+                            <i class="bi bi-box-arrow-right"></i>
+                        </button>
+                    </form>
+                }
             </div>
         </div>
     </nav>
@@ -108,6 +121,24 @@
                 </li>
 
             </ul>
+
+            <div class="px-2 py-2 border-top border-secondary">
+                <a class="nav-link sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" ? "active" : "")"
+                   asp-controller="Admin" asp-action="Usuarios" title="Usuarios">
+                    <i class="bi bi-people sidebar-icon"></i>
+                    <span class="sidebar-label">Usuarios</span>
+                </a>
+                <a class="nav-link sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString() == "CambiarPassword" ? "active" : "")"
+                   asp-controller="Account" asp-action="CambiarPassword" title="Cambiar contraseña">
+                    <i class="bi bi-key sidebar-icon"></i>
+                    <span class="sidebar-label">Cambiar clave</span>
+                </a>
+                <a class="nav-link sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString() == "ConfigurarTotp" ? "active" : "")"
+                   asp-controller="Account" asp-action="ConfigurarTotp" title="Google Authenticator">
+                    <i class="bi bi-shield-lock sidebar-icon"></i>
+                    <span class="sidebar-label">Authenticator</span>
+                </a>
+            </div>
 
             <div class="px-3 py-3 border-top border-secondary sidebar-footer">
                 <span class="sidebar-label text-white-50 small">

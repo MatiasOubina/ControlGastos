@@ -1,3 +1,4 @@
+﻿using Microsoft.AspNetCore.Authorization;
 using ControlGastos.Services.Interfaces;
 using ControlGastos.Web.Helpers;
 using ControlGastos.Web.Models;
@@ -6,6 +7,7 @@ using System.Globalization;
 
 namespace ControlGastos.Web.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
     private readonly IMovimientoService      _movService;
@@ -23,17 +25,17 @@ public class HomeController : Controller
         var mes  = hoy.Month;
         var anio = hoy.Year;
 
-        // ── Consultas ─────────────────────────────────────────────────────
+        // â”€â”€ Consultas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         var movsMes       = (await _movService.ObtenerPorPeriodoAsync(mes, anio)).ToList();
         var saldosInic    = (await _saldosService.ObtenerPorPeriodoAsync(mes, anio)).ToList();
         var cuentas       = (await _movService.ObtenerCuentasAsync()).ToList();
 
-        // Rango de 6 meses para el gráfico de evolución
-        var desde = DateOnly.FromDateTime(hoy.AddMonths(-5).AddDays(1 - hoy.Day)); // primer día de hace 5 meses
+        // Rango de 6 meses para el grÃ¡fico de evoluciÃ³n
+        var desde = DateOnly.FromDateTime(hoy.AddMonths(-5).AddDays(1 - hoy.Day)); // primer dÃ­a de hace 5 meses
         var hasta = DateOnly.FromDateTime(hoy);
         var movsRango = (await _movService.ObtenerPorRangoAsync(desde, hasta)).ToList();
 
-        // ── ViewModel ─────────────────────────────────────────────────────
+        // â”€â”€ ViewModel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         var vm = new DashboardViewModel { Mes = mes, Anio = anio };
 
         // KPIs del mes actual
@@ -46,10 +48,10 @@ public class HomeController : Controller
         vm.BalanceNeto         = vm.TotalIngresos - vm.TotalEgresos;
         vm.CantidadMovimientos = movsMes.Count;
 
-        // Últimos 5 movimientos
+        // Ãšltimos 5 movimientos
         vm.UltimosMovimientos = movsMes.Take(5).ToList();
 
-        // Gastos por categoría (mes actual, solo egresos)
+        // Gastos por categorÃ­a (mes actual, solo egresos)
         vm.GastosPorCategoria = movsMes
             .Where(m => MovimientoHelper.GetClasificacion(m.IdTipoMovimientoNavigation.Descripcion) == "Egreso")
             .GroupBy(m => m.IdCategoriaNavigation.Descripcion)
@@ -58,7 +60,7 @@ public class HomeController : Controller
             .Take(6)
             .ToList();
 
-        // Evolución mensual (últimos 6 meses)
+        // EvoluciÃ³n mensual (Ãºltimos 6 meses)
         var culturaEs = new CultureInfo("es-AR");
         for (int i = 5; i >= 0; i--)
         {
@@ -99,7 +101,7 @@ public class HomeController : Controller
                         movBalance -= m.Monto;
                         break;
                     case "Pasaje":
-                        // Convención: ID menor = origen (débito), ID mayor = destino (crédito)
+                        // ConvenciÃ³n: ID menor = origen (dÃ©bito), ID mayor = destino (crÃ©dito)
                         if (m.IdMovimientoVinculado.HasValue)
                             movBalance += m.Id < m.IdMovimientoVinculado.Value ? -m.Monto : m.Monto;
                         break;
@@ -109,7 +111,7 @@ public class HomeController : Controller
             vm.SaldosPorCuenta.Add(new SaldoCuenta(cuenta.Descripcion, saldoInicial + movBalance, 0));
         }
 
-        // Calcular porcentaje relativo al saldo máximo positivo
+        // Calcular porcentaje relativo al saldo mÃ¡ximo positivo
         var maxSaldo = vm.SaldosPorCuenta.Any() ? vm.SaldosPorCuenta.Max(s => s.Saldo) : 0m;
         if (maxSaldo > 0)
         {
@@ -124,3 +126,4 @@ public class HomeController : Controller
         return View(vm);
     }
 }
+

@@ -1,9 +1,11 @@
+﻿using Microsoft.AspNetCore.Authorization;
 using ControlGastos.Data.Entities;
 using ControlGastos.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ControlGastos.Web.Controllers;
 
+[Authorize]
 public class TiposMovimientoController : Controller
 {
     private readonly ITiposMovimientoService _service;
@@ -31,7 +33,7 @@ public class TiposMovimientoController : Controller
 
         if (await _service.ExisteDescripcionAsync(tipoMovimiento.Descripcion))
         {
-            ModelState.AddModelError(nameof(tipoMovimiento.Descripcion), "Ya existe un tipo de movimiento con esa descripción.");
+            ModelState.AddModelError(nameof(tipoMovimiento.Descripcion), "Ya existe un tipo de movimiento con esa descripciÃ³n.");
             return View(tipoMovimiento);
         }
 
@@ -59,7 +61,7 @@ public class TiposMovimientoController : Controller
 
         if (await _service.ExisteDescripcionAsync(tipoMovimiento.Descripcion, id))
         {
-            ModelState.AddModelError(nameof(tipoMovimiento.Descripcion), "Ya existe un tipo de movimiento con esa descripción.");
+            ModelState.AddModelError(nameof(tipoMovimiento.Descripcion), "Ya existe un tipo de movimiento con esa descripciÃ³n.");
             return View(tipoMovimiento);
         }
 
@@ -77,3 +79,4 @@ public class TiposMovimientoController : Controller
         return RedirectToAction(nameof(Index));
     }
 }
+

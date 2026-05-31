@@ -1,3 +1,4 @@
+﻿using Microsoft.AspNetCore.Authorization;
 using ControlGastos.Data.Entities;
 using ControlGastos.Services.Interfaces;
 using ControlGastos.Web.Helpers;
@@ -7,6 +8,7 @@ using System.Text.Json;
 
 namespace ControlGastos.Web.Controllers;
 
+[Authorize]
 public class MovimientoController : Controller
 {
     private readonly IMovimientoService _service;
@@ -61,14 +63,14 @@ public class MovimientoController : Controller
     {
         RemoverNavegaciones();
 
-        // Determinar clasificación del tipo seleccionado
+        // Determinar clasificaciÃ³n del tipo seleccionado
         var tipos = await _service.ObtenerTiposMovimientoAsync();
         var tipo  = tipos.FirstOrDefault(t => t.Id == movimiento.IdTipoMovimiento);
         bool esPasaje = tipo != null && MovimientoHelper.EsPasaje(tipo.Descripcion);
 
         if (esPasaje)
         {
-            // Para pasajes la categoría la asigna el servicio automáticamente
+            // Para pasajes la categorÃ­a la asigna el servicio automÃ¡ticamente
             ModelState.Remove(nameof(Movimiento.IdCategoria));
 
             if (!idCuentaDestino.HasValue || idCuentaDestino == 0)
@@ -169,7 +171,7 @@ public class MovimientoController : Controller
         return RedirectToAction(nameof(Index), new { mes, anio });
     }
 
-    // Endpoint AJAX: subcategorías por categoría
+    // Endpoint AJAX: subcategorÃ­as por categorÃ­a
     [HttpGet]
     public async Task<IActionResult> GetSubCategorias(int idCategoria)
     {
@@ -177,7 +179,7 @@ public class MovimientoController : Controller
         return Json(subs.Select(s => new { s.Id, s.Descripcion }));
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
+    // â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     private void RemoverNavegaciones()
     {
@@ -203,7 +205,7 @@ public class MovimientoController : Controller
         ViewBag.TiposMovimiento = new SelectList(tipos,  "Id", "Descripcion", mov?.IdTipoMovimiento);
         ViewBag.FormasDePago    = new SelectList(formas, "Id", "Descripcion", mov?.IdFormaDePago);
 
-        // Subcategorías del movimiento actual (para Edit)
+        // SubcategorÃ­as del movimiento actual (para Edit)
         if (mov?.IdCategoria > 0)
         {
             var subs = await _service.ObtenerSubCategoriasPorCategoriaAsync(mov.IdCategoria);
@@ -214,7 +216,7 @@ public class MovimientoController : Controller
             ViewBag.SubCategorias = new SelectList(Enumerable.Empty<object>(), "Id", "Descripcion");
         }
 
-        // Diccionario {tipoId → clasificación} para el JS del formulario
+        // Diccionario {tipoId â†’ clasificaciÃ³n} para el JS del formulario
         ViewBag.TiposClasificacionJson = JsonSerializer.Serialize(
             tipos.ToDictionary(
                 t => t.Id.ToString(),
@@ -222,3 +224,4 @@ public class MovimientoController : Controller
             ));
     }
 }
+

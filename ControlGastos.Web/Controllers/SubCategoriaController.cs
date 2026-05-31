@@ -1,3 +1,4 @@
+﻿using Microsoft.AspNetCore.Authorization;
 using ControlGastos.Data.Entities;
 using ControlGastos.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ControlGastos.Web.Controllers;
 
+[Authorize]
 public class SubCategoriaController : Controller
 {
     private readonly ISubCategoriaService _service;
@@ -41,13 +43,13 @@ public class SubCategoriaController : Controller
         if (await _service.ExisteDescripcionAsync(subCategoria.Descripcion, subCategoria.IdCategoria))
         {
             ModelState.AddModelError(nameof(subCategoria.Descripcion),
-                "Ya existe una subcategoría con esa descripción en la categoría seleccionada.");
+                "Ya existe una subcategorÃ­a con esa descripciÃ³n en la categorÃ­a seleccionada.");
             await CargarCategoriasAsync(subCategoria.IdCategoria);
             return View(subCategoria);
         }
 
         await _service.CreateAsync(subCategoria);
-        TempData["Success"] = "Subcategoría creada correctamente.";
+        TempData["Success"] = "SubcategorÃ­a creada correctamente.";
         return RedirectToAction(nameof(Index));
     }
 
@@ -77,13 +79,13 @@ public class SubCategoriaController : Controller
         if (await _service.ExisteDescripcionAsync(subCategoria.Descripcion, subCategoria.IdCategoria, id))
         {
             ModelState.AddModelError(nameof(subCategoria.Descripcion),
-                "Ya existe una subcategoría con esa descripción en la categoría seleccionada.");
+                "Ya existe una subcategorÃ­a con esa descripciÃ³n en la categorÃ­a seleccionada.");
             await CargarCategoriasAsync(subCategoria.IdCategoria);
             return View(subCategoria);
         }
 
         await _service.UpdateAsync(subCategoria);
-        TempData["Success"] = "Subcategoría actualizada correctamente.";
+        TempData["Success"] = "SubcategorÃ­a actualizada correctamente.";
         return RedirectToAction(nameof(Index));
     }
 
@@ -92,11 +94,11 @@ public class SubCategoriaController : Controller
     public async Task<IActionResult> Delete(int id)
     {
         await _service.DeleteAsync(id);
-        TempData["Success"] = "Subcategoría eliminada correctamente.";
+        TempData["Success"] = "SubcategorÃ­a eliminada correctamente.";
         return RedirectToAction(nameof(Index));
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
+    // â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     private async Task CargarCategoriasAsync(int? selectedId = null)
     {
@@ -104,3 +106,4 @@ public class SubCategoriaController : Controller
         ViewBag.Categorias = new SelectList(categorias, "Id", "Descripcion", selectedId);
     }
 }
+

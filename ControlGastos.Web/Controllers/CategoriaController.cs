@@ -1,9 +1,11 @@
+﻿using Microsoft.AspNetCore.Authorization;
 using ControlGastos.Data.Entities;
 using ControlGastos.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ControlGastos.Web.Controllers;
 
+[Authorize]
 public class CategoriaController : Controller
 {
     private readonly ICategoriaService _service;
@@ -32,12 +34,12 @@ public class CategoriaController : Controller
 
         if (await _service.ExisteDescripcionAsync(categoria.Descripcion))
         {
-            ModelState.AddModelError(nameof(categoria.Descripcion), "Ya existe una categoría con esa descripción.");
+            ModelState.AddModelError(nameof(categoria.Descripcion), "Ya existe una categorÃ­a con esa descripciÃ³n.");
             return View(categoria);
         }
 
         await _service.CreateAsync(categoria);
-        TempData["Success"] = "Categoría creada correctamente.";
+        TempData["Success"] = "CategorÃ­a creada correctamente.";
         return RedirectToAction(nameof(Index));
     }
 
@@ -61,12 +63,12 @@ public class CategoriaController : Controller
 
         if (await _service.ExisteDescripcionAsync(categoria.Descripcion, id))
         {
-            ModelState.AddModelError(nameof(categoria.Descripcion), "Ya existe una categoría con esa descripción.");
+            ModelState.AddModelError(nameof(categoria.Descripcion), "Ya existe una categorÃ­a con esa descripciÃ³n.");
             return View(categoria);
         }
 
         await _service.UpdateAsync(categoria);
-        TempData["Success"] = "Categoría actualizada correctamente.";
+        TempData["Success"] = "CategorÃ­a actualizada correctamente.";
         return RedirectToAction(nameof(Index));
     }
 
@@ -75,7 +77,8 @@ public class CategoriaController : Controller
     public async Task<IActionResult> Delete(int id)
     {
         await _service.DeleteAsync(id);
-        TempData["Success"] = "Categoría eliminada correctamente.";
+        TempData["Success"] = "CategorÃ­a eliminada correctamente.";
         return RedirectToAction(nameof(Index));
     }
 }
+
